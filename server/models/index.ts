@@ -1,4 +1,4 @@
-import * as Sequelize from 'sequelize'
+import  Sequelize from 'sequelize'
 import {StudentAttributes, StudentInstance} from './student'
 import {TeacherAttributes, TeacherInstance} from './teacher'
 import {CourseAttributes, CourseInstance} from './course'
@@ -19,6 +19,7 @@ import LimitModel from './limit-model'
 import WarningModel from './warning-model'
 import GradeGroupModel from './grade-group-model'
 import EventModel from './event-model'
+
 const env = process.env.NODE_ENV || 'development'
 const config = require('../../config/config')[env]
 

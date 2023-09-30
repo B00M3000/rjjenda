@@ -5,7 +5,7 @@ import app from './app'
 import {sequelize} from './models'
 import fs from 'fs'
 
-const { port } = JSON.parse(fs.readFileSync('../settings.json'))
+const { port } = JSON.parse(fs.readFileSync('../settings.json', 'utf8'))
 
 sequelize.sync()
 	.then(() => {

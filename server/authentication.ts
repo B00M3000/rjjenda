@@ -5,8 +5,8 @@ import {TeacherInstance} from './models/teacher'
 import {Student, Teacher} from './models'
 import fs from 'fs'
 
-const { https, hostDomain, port, emailDomain } = JSON.parse(fs.readFileSync('../settings.json'))
-const { clientID, clientSecret } = JSON.parse(fs.readFileSync('../config/oauth.json'))
+const { https, hostDomain, port, emailDomain } = JSON.parse(fs.readFileSync('../settings.json', 'utf8'))
+const { clientID, clientSecret } = JSON.parse(fs.readFileSync('../config/oauth.json', 'utf8'))
 
 export type UserType = StudentInstance | TeacherInstance
 export class SavedUserType {

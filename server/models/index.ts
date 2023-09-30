@@ -26,7 +26,7 @@ const config = {
 	database: DB_DATABASE,
 	dialect: DB_DIALECT,
 	protocol: DB_PROTOCOL,
-	port: DB_PORT,
+	port: parseInt(DB_PORT),
 	host: DB_HOST,
 	operatorsAliases: DB_OPERATORS_ALIASES
 }

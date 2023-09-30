@@ -7,7 +7,7 @@ export interface RowObject {
 
 export const parse = (csvStream: Readable, headers?: string[]): Promise<RowObject[]> =>
 	new Promise<RowObject[]>((resolve, reject) => {
-		const csvReader = parser({skip_empty_lines: true}, (err?: CsvError, data: string[][]) => {
+		const csvReader = parser({skip_empty_lines: true}, (err: CsvError | undefined, data: string[][]) => {
 			if (err) return reject(err)
 
 			let rows: string[][]

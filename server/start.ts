@@ -1,9 +1,11 @@
 #!/usr/bin/env node
 
-import * as http from 'http'
+import http from 'http'
 import app from './app'
 import {sequelize} from './models'
-import {port} from '../settings.json'
+import fs from 'fs'
+
+const { port } = JSON.parse(fs.readFileSync('../settings.json'))
 
 sequelize.sync()
 	.then(() => {

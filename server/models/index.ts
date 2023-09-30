@@ -28,7 +28,7 @@ const config = {
 	protocol: DB_PROTOCOL,
 	port: parseInt(DB_PORT),
 	host: DB_HOST,
-	operatorsAliases: new Boolean(DB_OPERATORS_ALIASES)
+	operatorsAliases: DB_OPERATORS_ALIASES == "true"
 }
 
 

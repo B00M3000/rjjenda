@@ -1,4 +1,4 @@
-import { parser } from 'csv-parse'
+import { Parser } from 'csv-parse'
 import {Readable} from 'stream'
 
 export interface RowObject {
@@ -7,7 +7,7 @@ export interface RowObject {
 
 export const parse = (csvStream: Readable, headers?: string[]): Promise<RowObject[]> =>
 	new Promise<RowObject[]>((resolve, reject) => {
-		const csvReader = parser({skip_empty_lines: true}, (err, data: string[][]) => {
+		const csvReader = Parser({skip_empty_lines: true}, (err, data: string[][]) => {
 			if (err) return reject(err)
 
 			let rows: string[][]

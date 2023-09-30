@@ -7,7 +7,6 @@ import {StudentInstance} from './models/student'
 import {WarningInstance} from './models/warning'
 import {getWarnings} from './models/warning-model'
 import ExtendedDate from '../util/extended-date'
-import fs from 'fs'
 
 const { EMAIL_DOMAIN } = process.env
 

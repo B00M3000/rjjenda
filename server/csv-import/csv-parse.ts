@@ -1,4 +1,5 @@
-import { parse as parser, type CsvError } from 'csv-parse'
+import { parse as parser } from 'csv-parse'
+import type { CsvError } from 'csv-parse'
 import {Readable} from 'stream'
 
 export interface RowObject {

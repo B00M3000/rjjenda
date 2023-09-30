@@ -5,7 +5,7 @@
 	"scripts": {
 		"build": "webpack",
 		"compile": "tsc",
-		"start": "npm run compile && build/start.js",
+		"start": "npm run compile && build/server/start.js",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"repository": {

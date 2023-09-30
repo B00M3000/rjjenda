@@ -9,6 +9,8 @@ dotenv.config()
 
 const { PORT } = process.env
 
+console.log(process.env)
+
 sequelize.sync()
 	.then(() => {
 		return Promise.resolve(http.createServer(app))

@@ -24,7 +24,7 @@ const { DB_USERNAME, DB_DATABASE, DB_DIALECT, DB_PROTOCOL, DB_PORT, DB_HOST, DB_
 const config = {
 	username: DB_USERNAME,
 	database: DB_DATABASE,
-	dialect: DB_DIALECT || "postgres",
+	dialect: DB_DIALECT,
 	protocol: DB_PROTOCOL,
 	port: parseInt(DB_PORT),
 	host: DB_HOST,

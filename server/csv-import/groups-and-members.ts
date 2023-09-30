@@ -1,4 +1,4 @@
-import * as Bluebird from 'bluebird'
+import Bluebird from 'bluebird'
 import {Readable} from 'stream'
 import {parse, RowObject} from './csv-parse'
 import {Course, Group, Section, Student, Teacher} from '../models'

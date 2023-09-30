@@ -7,7 +7,8 @@ import {StudentInstance} from './models/student'
 import {WarningInstance} from './models/warning'
 import {getWarnings} from './models/warning-model'
 import ExtendedDate from '../util/extended-date'
-import {emailDomain} from '../settings.json'
+import fs from 'fs'
+const { emailDomain } = JSON.parse(fs.readFileSync('../settings.json', 'utf8'))
 
 function getEmail(username: string) {
 	return username + '@' + emailDomain

@@ -24,14 +24,12 @@ const { DB_USERNAME, DB_DATABASE, DB_DIALECT, DB_PROTOCOL, DB_PORT, DB_HOST, DB_
 const config = {
 	username: DB_USERNAME,
 	database: DB_DATABASE,
-	dialect: DB_DIALECT,
+	dialect: DB_DIALECT || "postgres",
 	protocol: DB_PROTOCOL,
 	port: parseInt(DB_PORT),
 	host: DB_HOST,
 	operatorsAliases: DB_OPERATORS_ALIASES == "true"
 }
-
-
 
 type AssociateFunction = (models: SequelizeModels) => void
 export interface SequelizeModels {

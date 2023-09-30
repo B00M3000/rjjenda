@@ -1,4 +1,4 @@
-import { Sequelize } from 'sequelize'
+import Sequelize from 'sequelize'
 import {StudentAttributes, StudentInstance} from './student'
 import {TeacherAttributes, TeacherInstance} from './teacher'
 import {CourseAttributes, CourseInstance} from './course'

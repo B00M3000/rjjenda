@@ -3,6 +3,7 @@ import {OAuth2Strategy as GoogleStrategy} from 'passport-google-oauth'
 import {StudentInstance} from './models/student'
 import {TeacherInstance} from './models/teacher'
 import {Student, Teacher} from './models'
+
 const { HOST_DOMAIN, PORT, EMAIL_DOMAIN, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } = process.env
 
 export type UserType = StudentInstance | TeacherInstance

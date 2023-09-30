@@ -5,7 +5,6 @@ import path from 'path'
 import apiRouter from './api-routers/api'
 import passport from './authentication'
 import {sequelize} from './models'
-import fs from 'fs'
 
 const { CLIENT_SECRET } = process.env
 

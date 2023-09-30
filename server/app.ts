@@ -7,13 +7,13 @@ import passport from './authentication'
 import {sequelize} from './models'
 import fs from 'fs'
 
-const { clientSecret } = JSON.parse(fs.readFileSync('../config/oauth.json', 'utf8'))
+const { CLIENT_SECRET } = process.env
 
 const SequelizeStore = connectSessionSequelize(session.Store)
 const app = express()
 
 app.use(session({
-	secret: clientSecret,
+	secret: CLIENT_SECRET,
 	resave: false,
 	saveUninitialized: false,
 	store: new SequelizeStore({db: sequelize})

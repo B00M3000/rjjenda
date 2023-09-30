@@ -8,10 +8,11 @@ import {WarningInstance} from './models/warning'
 import {getWarnings} from './models/warning-model'
 import ExtendedDate from '../util/extended-date'
 import fs from 'fs'
-const { emailDomain } = JSON.parse(fs.readFileSync('../settings.json', 'utf8'))
+
+const { EMAIL_DOMAIN } = process.env
 
 function getEmail(username: string) {
-	return username + '@' + emailDomain
+	return username + '@' + EMAIL_DOMAIN
 }
 
 interface GroupInfo {

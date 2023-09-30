@@ -20,8 +20,18 @@ import WarningModel from './warning-model'
 import GradeGroupModel from './grade-group-model'
 import EventModel from './event-model'
 
-const env = process.env.NODE_ENV || 'development'
-const config = require('../../config/config')[env]
+const { DB_USERNAME, DB_DATABASE, DB_DIALECT, DB_PROTOCOL, DB_PORT, DB_HOST, DB_OPERATORS_ALIASES } = process.env
+const config = {
+	username: DB_USERNAME,
+	database: DB_DATABASE,
+	dialect: DB_DIALECT,
+	protocol: DB_PROTOCOL,
+	port: DB_PORT,
+	host: DB_HOST,
+	operatorsAliases: DB_OPERATORS_ALIASES
+}
+
+
 
 type AssociateFunction = (models: SequelizeModels) => void
 export interface SequelizeModels {

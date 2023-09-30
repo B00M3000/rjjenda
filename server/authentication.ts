@@ -3,10 +3,7 @@ import {OAuth2Strategy as GoogleStrategy} from 'passport-google-oauth'
 import {StudentInstance} from './models/student'
 import {TeacherInstance} from './models/teacher'
 import {Student, Teacher} from './models'
-import fs from 'fs'
-
-const { https, hostDomain, port, emailDomain } = JSON.parse(fs.readFileSync('../settings.json', 'utf8'))
-const { clientID, clientSecret } = JSON.parse(fs.readFileSync('../config/oauth.json', 'utf8'))
+const { HOST_DOMAIN, PORT, EMAIL_DOMAIN, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } = process.env
 
 export type UserType = StudentInstance | TeacherInstance
 export class SavedUserType {
@@ -65,9 +62,9 @@ export function lookupUsername(username: string, done: (err: Error | null, user?
 		})
 }
 passport.use(new GoogleStrategy({
-	clientID,
-	clientSecret,
-	callbackURL: 'http' + (https ? 's' : '') + '://' + hostDomain + ':' + String(port) + '/auth/callback'
+	clientID: GOOGLE_CLIENT_ID,
+	clientSecret: GOOGLE_CLIENT_SECRET,
+	callbackURL: `https://${HOST_DOMAIN}:${PORT}/auth/callback`
 }, (_, __, profile, done) => {
 	if (!profile.emails) {
 		done(new Error('No emails'))
@@ -76,7 +73,7 @@ passport.use(new GoogleStrategy({
 	for (const email of profile.emails) {
 		const {value} = email
 		const [username, domain] = value.split('@')
-		if (domain === emailDomain) {
+		if (domain === EMAIL_DOMAIN) {
 			lookupUsername(username, done)
 			return
 		}

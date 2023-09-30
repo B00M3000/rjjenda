@@ -3,16 +3,18 @@
 import http from 'http'
 import app from './app'
 import {sequelize} from './models'
-import fs from 'fs'
+import dotenv from 'dotenv'
 
-const { port } = JSON.parse(fs.readFileSync('../settings.json', 'utf8'))
+dotenv.config()
+
+const { PORT } = process.env
 
 sequelize.sync()
 	.then(() => {
 		return Promise.resolve(http.createServer(app))
 	})
 	.then(server => new Promise<void>((resolve, reject) =>
-		server.listen(port, resolve)
+		server.listen(PORT, resolve)
 			.on('error', reject)
 	))
-	.then(() => console.log('Listening on port:', port))
+	.then(() => console.log('Listening on port:', PORT))

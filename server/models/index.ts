@@ -19,11 +19,12 @@ import LimitModel from './limit-model'
 import WarningModel from './warning-model'
 import GradeGroupModel from './grade-group-model'
 import EventModel from './event-model'
+import fs from 'fs'
 
 import dotenv from 'dotenv'
 dotenv.config()
 
-const { DB_USERNAME, DB_DATABASE, DB_DIALECT, DB_PROTOCOL, DB_PORT, DB_HOST, DB_OPERATORS_ALIASES, DB_PASSWORD } = process.env
+const { DB_USERNAME, DB_DATABASE, DB_DIALECT, DB_PROTOCOL, DB_PORT, DB_HOST, DB_OPERATORS_ALIASES, DB_PASSWORD, DB_CA_PATH } = process.env
 const config = {
 	username: DB_USERNAME,
 	database: DB_DATABASE,
@@ -32,7 +33,12 @@ const config = {
 	port: parseInt(DB_PORT),
 	host: DB_HOST,
 	operatorsAliases: DB_OPERATORS_ALIASES == "true",
-	password: DB_PASSWORD
+	password: DB_PASSWORD,
+	dialectOptions: {
+		ssl: {
+			ca: fs.readFileSync(DB_CA_PATH, 'utf8')
+		}
+	}
 }
 
 type AssociateFunction = (models: SequelizeModels) => void

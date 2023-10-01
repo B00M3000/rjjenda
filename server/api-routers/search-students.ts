@@ -1,6 +1,6 @@
 import * as bodyParser from 'body-parser'
 import * as express from 'express'
-import * as Sequelize from 'sequelize'
+import Sequelize from 'sequelize'
 import {MatchingStudent, StudentQuery} from '../../api'
 import {success, error} from '../api-respond'
 import {restrictToTeacher} from '../api-restrict'

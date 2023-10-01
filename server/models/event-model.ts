@@ -1,4 +1,4 @@
-import * as Sequelize from 'sequelize'
+import Sequelize from 'sequelize'
 import {EventAttributes, EventInstance} from './event'
 
 export default (sequelize: Sequelize.Sequelize): Sequelize.Model<EventInstance, EventAttributes> =>

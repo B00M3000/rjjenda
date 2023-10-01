@@ -1,4 +1,4 @@
-import * as Sequelize from 'sequelize'
+import Sequelize from 'sequelize'
 import {CourseAttributes, CourseInstance} from './course'
 import {addAssociations} from './index'
 

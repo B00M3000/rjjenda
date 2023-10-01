@@ -1,4 +1,4 @@
-import * as Sequelize from 'sequelize'
+import Sequelize from 'sequelize'
 import {WarningAttributes, WarningInstance} from './warning'
 
 let Warning: Sequelize.Model<WarningInstance, WarningAttributes> | undefined

@@ -1,4 +1,4 @@
-import * as Sequelize from 'sequelize'
+import Sequelize from 'sequelize'
 import {GradeGroupAttributes, GradeGroupInstance} from './grade-group'
 import {addAssociations} from './index'
 

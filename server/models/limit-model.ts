@@ -1,4 +1,4 @@
-import * as Sequelize from 'sequelize'
+import Sequelize from 'sequelize'
 import {LimitAttributes, LimitInstance} from './limit'
 
 export default (sequelize: Sequelize.Sequelize): Sequelize.Model<LimitInstance, LimitAttributes> =>

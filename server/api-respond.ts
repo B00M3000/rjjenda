@@ -1,5 +1,5 @@
 import {Response} from 'express'
-import * as Sequelize from 'sequelize'
+import Sequelize from 'sequelize'
 import {APIResponse} from '../api'
 
 const VALIDATION_ERROR = 'Validation error'

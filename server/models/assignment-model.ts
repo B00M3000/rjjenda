@@ -1,4 +1,4 @@
-import * as Sequelize from 'sequelize'
+import Sequelize from 'sequelize'
 import {AssignmentAttributes, AssignmentInstance} from './assignment'
 import {addAssociations} from './index'
 

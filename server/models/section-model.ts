@@ -1,4 +1,4 @@
-import * as Sequelize from 'sequelize'
+import Sequelize from 'sequelize'
 import {SectionAttributes, SectionInstance} from './section'
 import {addAssociations} from './index'
 

@@ -1,6 +1,6 @@
 import * as bodyParser from 'body-parser'
 import * as express from 'express'
-import * as Sequelize from 'sequelize'
+import Sequelize from 'sequelize'
 import {Groups, MatchingStudent, NewGroupName, NewGroup} from '../../api'
 import {error, success} from '../api-respond'
 import {Course, Group, Section, Student, Teacher} from '../models'

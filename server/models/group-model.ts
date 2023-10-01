@@ -1,4 +1,4 @@
-import * as Sequelize from 'sequelize'
+import Sequelize from 'sequelize'
 import {GroupAttributes, GroupInstance} from './group'
 import {addAssociations} from './index'
 

@@ -7,6 +7,8 @@ import {sequelize} from './models'
 import dotenv from 'dotenv'
 dotenv.config()
 
+const { PORT } = process.env
+
 sequelize.sync()
 	.then(() => {
 		return Promise.resolve(http.createServer(app))

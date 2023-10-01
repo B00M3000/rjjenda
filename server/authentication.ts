@@ -68,7 +68,7 @@ export function lookupUsername(username: string, done: (err: Error | null, user?
 passport.use(new GoogleStrategy({
 	clientID: GOOGLE_CLIENT_ID,
 	clientSecret: GOOGLE_CLIENT_SECRET,
-	callbackURL: `https://${HOST_DOMAIN}:${PORT}/auth/callback`
+	callbackURL: `https://${HOST_DOMAIN}/auth/callback`
 }, (_, __, profile, done) => {
 	if (!profile.emails) {
 		done(new Error('No emails'))

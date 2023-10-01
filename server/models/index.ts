@@ -23,7 +23,7 @@ import EventModel from './event-model'
 import dotenv from 'dotenv'
 dotenv.config()
 
-const { DB_USERNAME, DB_DATABASE, DB_DIALECT, DB_PROTOCOL, DB_PORT, DB_HOST, DB_OPERATORS_ALIASES } = process.env
+const { DB_USERNAME, DB_DATABASE, DB_DIALECT, DB_PROTOCOL, DB_PORT, DB_HOST, DB_OPERATORS_ALIASES, DB_PASSWORD } = process.env
 const config = {
 	username: DB_USERNAME,
 	database: DB_DATABASE,
@@ -31,7 +31,8 @@ const config = {
 	protocol: DB_PROTOCOL,
 	port: parseInt(DB_PORT),
 	host: DB_HOST,
-	operatorsAliases: DB_OPERATORS_ALIASES == "true"
+	operatorsAliases: DB_OPERATORS_ALIASES == "true",
+	password: DB_PASSWORD
 }
 
 type AssociateFunction = (models: SequelizeModels) => void

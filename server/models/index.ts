@@ -31,6 +31,8 @@ const config = {
 	operatorsAliases: DB_OPERATORS_ALIASES == "true"
 }
 
+console.log(config)
+
 type AssociateFunction = (models: SequelizeModels) => void
 export interface SequelizeModels {
 	Student: Sequelize.Model<StudentInstance, StudentAttributes>

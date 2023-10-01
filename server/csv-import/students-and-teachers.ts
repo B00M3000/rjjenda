@@ -3,7 +3,11 @@ import {Readable} from 'stream'
 import {NewStudent} from '../../api'
 import {GradeGroup, Group, Student, Teacher} from '../models'
 import {GroupInstance} from '../models/group'
-const {emailDomain} = require('../../settings')
+
+import dotenv from 'dotenv'
+dotenv.config()
+
+const { EMAIL_DOMAIN } = process.env
 
 interface Person extends RowObject {
 	'User ID': string
@@ -125,7 +129,7 @@ export default (csvStream: Readable): Promise<string[]> =>
 					'Email ID': email
 				} = teacher
 				const {username, domain} = getUsername(email)
-				if (domain !== emailDomain) invalidEmails.push(email)
+				if (domain !== EMAIL_DOMAIN) invalidEmails.push(email)
 				return Teacher.findOrCreate({
 					where: {id},
 					defaults: {

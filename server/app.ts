@@ -6,13 +6,13 @@ import apiRouter from './api-routers/api'
 import passport from './authentication'
 import {sequelize} from './models'
 
-const { CLIENT_SECRET } = process.env
+const { SESSION_SECRETS } = process.env
 
 const SequelizeStore = connectSessionSequelize(session.Store)
 const app = express()
 
 app.use(session({
-	secret: CLIENT_SECRET,
+	secret: SESSION_SECRETS.split(','),
 	resave: false,
 	saveUninitialized: false,
 	store: new SequelizeStore({db: sequelize})

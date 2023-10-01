@@ -4,6 +4,9 @@ import {StudentInstance} from './models/student'
 import {TeacherInstance} from './models/teacher'
 import {Student, Teacher} from './models'
 
+import dotenv from 'dotenv'
+dotenv.config()
+
 const { HOST_DOMAIN, PORT, EMAIL_DOMAIN, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } = process.env
 
 export type UserType = StudentInstance | TeacherInstance

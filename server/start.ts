@@ -3,11 +3,9 @@
 import http from 'http'
 import app from './app'
 import {sequelize} from './models'
+
 import dotenv from 'dotenv'
-
 dotenv.config()
-
-const { PORT } = process.env
 
 sequelize.sync()
 	.then(() => {

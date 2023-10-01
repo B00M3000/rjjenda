@@ -1,4 +1,4 @@
-import * as express from 'express'
+import express from 'express'
 import {SectionsNotFound, WrongDomainEmails} from '../../api'
 import {error, success} from '../api-respond'
 import {restrictToAdmin} from '../api-restrict'

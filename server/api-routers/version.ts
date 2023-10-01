@@ -1,4 +1,4 @@
-import * as express from 'express'
+import express from 'express'
 import {VersionInfo} from '../../api'
 import {success} from '../api-respond'
 

@@ -1,4 +1,4 @@
-import * as express from 'express'
+import express from 'express'
 import passport, {UserType} from '../authentication'
 
 const router = express.Router()

@@ -1,4 +1,4 @@
-import * as express from 'express'
+import express from 'express'
 import {LoggedIn} from '../../api'
 import {success} from '../api-respond'
 import {UserType, SavedUserType} from '../authentication'

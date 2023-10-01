@@ -1,5 +1,5 @@
-import * as bodyParser from 'body-parser'
-import * as express from 'express'
+import bodyParser from 'body-parser'
+import express from 'express'
 import Sequelize from 'sequelize'
 import {Courses, NewCourse, NewCourseName} from '../../api'
 import {success, error} from '../api-respond'

@@ -1,5 +1,5 @@
-import * as bodyParser from 'body-parser'
-import * as express from 'express'
+import bodyParser from 'body-parser'
+import express from 'express'
 import {NewEvent} from '../../api'
 import {error, success} from '../api-respond'
 import {Event} from '../models'

@@ -1,4 +1,4 @@
-import * as express from 'express'
+import express from 'express'
 import {success} from '../api-respond'
 
 const router = express.Router()

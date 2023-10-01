@@ -1,4 +1,4 @@
-import * as express from 'express'
+import express from 'express'
 import {restrictToLoggedIn} from '../api-restrict'
 import {success} from '../api-respond'
 import {UserInfo} from '../../api'

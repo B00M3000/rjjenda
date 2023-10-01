@@ -1,5 +1,5 @@
-import * as bodyParser from 'body-parser'
-import * as express from 'express'
+import bodyParser from 'body-parser'
+import express from 'express'
 import {Readable} from 'stream'
 import {SectionsNotFound} from '../../api'
 import {error, success} from '../api-respond'

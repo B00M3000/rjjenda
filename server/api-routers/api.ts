@@ -1,4 +1,4 @@
-import * as express from 'express'
+import express from 'express'
 import adminRouter from './admin'
 import assignmentsRouter from './assignments'
 import advisorRouter from './advisor'

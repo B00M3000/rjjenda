@@ -1,4 +1,4 @@
-import * as express from 'express'
+import express from 'express'
 import {AtFaultViolation} from '../../api'
 import {success, error} from '../api-respond'
 import {getAllViolations} from '../limit-check'

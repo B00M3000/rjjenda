@@ -4,9 +4,7 @@ import Sequelize from 'sequelize'
 import {Groups, MatchingStudent, NewGroupName, NewGroup} from '../../api'
 import {error, success} from '../api-respond'
 import {Course, Group, Section, Student, Teacher} from '../models'
-import {GroupAttributes, GroupInstance} from '../models/group'
-import {SectionInstance} from '../models/section'
-import {StudentInstance} from '../models/student'
+import {GroupAttributes} from '../models/group'
 import sectionGroupName from '../section-group-name'
 
 const router = express.Router()
@@ -29,7 +27,7 @@ router.get('/groups', (_, res) => {
 		.then(groups => {
 			const responsePromise: Promise<Groups> = Promise.all(
 				groups.map(group => {
-					let sectionPromise: PromiseLike<SectionInstance | null>
+					let sectionPromise: PromiseLike<Section | null>
 					if (group.sectionId === null) sectionPromise = Promise.resolve(null)
 					else {
 						sectionPromise = Section.findOne({ //I was having issues including student count and section in same group query
@@ -50,7 +48,7 @@ router.get('/groups', (_, res) => {
 						})
 					}
 					return sectionPromise.then(section => ({
-						id: group.id as number,
+						id: Number(group.id),
 						section: section !== null,
 						name:
 							section ? sectionGroupName(section) : (group.name || ''),
@@ -102,7 +100,7 @@ router.get('/group/set-teacher/:groupId/:teacherId', (req, res) => {
 	})
 		.then(group => {
 			if (group === null) throw new Error('No group with id: ' + String(id))
-			const section = group.section as SectionInstance
+			const section = group.section as Section
 			section.set('teacherId', teacherId)
 			return section.save()
 		})
@@ -135,7 +133,7 @@ router.post('/group',
 			.catch(error(res))
 	}
 )
-export function toGroupStudents(students: StudentInstance[]): MatchingStudent[] {
+export function toGroupStudents(students: Student[]): MatchingStudent[] {
 	return students.map(student => ({
 		id: student.id,
 		firstName: student.firstName,
@@ -166,8 +164,8 @@ router.get('/list-members/:id', (req, res) => {
 		.catch(error(res))
 })
 interface GroupAndStudent {
-	group: GroupInstance,
-	student: StudentInstance
+	group: Group,
+	student: Student
 }
 function getGroupAndStudent(req: express.Request): Promise<GroupAndStudent> {
 	const id = Number(req.params.id)

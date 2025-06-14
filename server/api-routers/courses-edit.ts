@@ -50,7 +50,7 @@ router.post('/course/set-name',
 )
 router.get('/new-section/:courseId/:number', (req, res) => {
 	const courseId = req.params.courseId as string
-	const number = req.params.number as number
+	const number = Number(req.params.number)
 	Section.create({
 		courseId,
 		number
@@ -66,7 +66,7 @@ router.get('/new-section/:courseId/:number', (req, res) => {
 })
 router.delete('/section/:courseId/:number', (req, res) => {
 	const courseId = req.params.courseId as string
-	const number = req.params.number as number
+	const number = Number(req.params.number)
 	Section.destroy({
 		where: {
 			courseId,

@@ -1,10 +1,6 @@
-import Bluebird from 'bluebird'
 import {Readable} from 'stream'
 import {parse, RowObject} from './csv-parse'
-import {Course, Group, Section, Student, Teacher} from '../models'
-import {CourseInstance} from '../models/course'
-import {GroupInstance} from '../models/group'
-import {StudentInstance} from '../models/student'
+import { Course, Group as GroupModel, Student, Section, Teacher } from '../models'
 
 interface GroupMemberStreams {
 	groupStream: Readable
@@ -43,8 +39,8 @@ export default ({groupStream, memberStream}: GroupMemberStreams): Promise<string
 				}
 				else courseMap.set(group['Course #'], group['Course Name']) //even if there are multiple sections, only records one course
 			}
-			const courseCreationPromises: Bluebird<any>[] = []
-			const courseInstanceMap = new Map<string, CourseInstance>() //mapping of courses IDs to created instances
+			const courseCreationPromises: Promise<any>[] = []
+			const courseInstanceMap = new Map<string, Course>() //mapping of courses IDs to created instances
 			for (const [id, name] of courseMap) {
 				courseCreationPromises.push(
 					Course.create({
@@ -63,8 +59,8 @@ export default ({groupStream, memberStream}: GroupMemberStreams): Promise<string
 							sectionTeachers.set(membership['Group ID'], membership['User ID'])
 						}
 					}
-					const sectionCreationPromises: Bluebird<any>[] = []
-					const groupInstanceMap = new Map<string, GroupInstance>() //mapping of 'COURSE-SECTION' to created group instances
+					const sectionCreationPromises: Promise<any>[] = []
+					const groupInstanceMap = new Map<string, GroupModel>() //mapping of 'COURSE-SECTION' to created group instances
 					for (const [courseSection, teacherId] of sectionTeachers) {
 						const [course, section] = courseSection.split('-')
 						if (!courseMap.has(course)) continue //must be an advisory "course"
@@ -81,7 +77,7 @@ export default ({groupStream, memberStream}: GroupMemberStreams): Promise<string
 										teacherId: teacher.id
 									})
 										.then(section =>
-											Group.create({
+											GroupModel.create({
 												sectionId: section.id as number,
 												name: null
 											})
@@ -90,10 +86,10 @@ export default ({groupStream, memberStream}: GroupMemberStreams): Promise<string
 								})
 						)
 					}
-					const studentInstanceMap = new Map<string, StudentInstance>()
+					const studentInstanceMap = new Map<string, Student>()
 					for (const student of allStudents) studentInstanceMap.set(student.id, student)
 					const groupStudents = new Map<string, string[]>() //mapping of group IDs to lists of all enrolled students
-					const advisorSetPromises: Bluebird<any>[] = []
+					const advisorSetPromises: Promise<any>[] = []
 					for (const membership of memberships) {
 						if (membership['Role(s)'] === 'Student') {
 							const groupId = membership['Group ID']
@@ -128,11 +124,12 @@ export default ({groupStream, memberStream}: GroupMemberStreams): Promise<string
 								}
 
 								groupMembersPromises.push(
-									groupInstance.setStudents(students.map(studentId => {
+									// Fix setStudents usage: ensure groupInstance.setStudents is a function
+									Promise.resolve(typeof groupInstance.setStudents === 'function' ? groupInstance.setStudents(students.map(studentId => {
 										const student = studentInstanceMap.get(studentId)
 										if (student === undefined) throw new Error('No such student: ' + studentId)
 										return student
-									}))
+									})) : Promise.reject(new Error('setStudents is not a function on groupInstance')))
 								)
 							}
 							return Promise.all(groupMembersPromises)

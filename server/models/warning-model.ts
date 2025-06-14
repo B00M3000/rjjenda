@@ -1,35 +1,39 @@
-import Sequelize from 'sequelize'
-import {WarningAttributes, WarningInstance} from './warning'
+import { Sequelize, DataTypes } from 'sequelize'
+import { Warning } from './warning'
 
-let Warning: Sequelize.Model<WarningInstance, WarningAttributes> | undefined
-
-//Ordered by weight
-let warningCache: WarningInstance[] | null = null
-function invalidateWarningCache(): void {
-	warningCache = null
+export default (sequelize: Sequelize) => {
+  Warning.init({
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true
+    },
+    assignmentWeight: {
+      type: DataTypes.FLOAT,
+      allowNull: false
+    },
+    studentId: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    groupId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    due: {
+      type: DataTypes.DATEONLY,
+      allowNull: false
+    },
+    color: {
+      type: DataTypes.STRING,
+      allowNull: false
+    }
+  }, {
+    sequelize,
+    modelName: 'Warning',
+    tableName: 'warnings',
+    timestamps: true
+  })
+  // No associations needed for Warning
+  return Warning
 }
-export const getWarnings = (): PromiseLike<WarningInstance[]> =>
-	warningCache
-		? Promise.resolve(warningCache)
-		: Warning!.findAll({
-			attributes: ['id', 'color', 'assignmentWeight'],
-			order: ['assignmentWeight']
-		})
-			.then(warnings => warningCache = warnings)
-
-export default (sequelize: Sequelize.Sequelize): Sequelize.Model<WarningInstance, WarningAttributes> =>
-	Warning = sequelize.define<WarningInstance, WarningAttributes>('warning', {
-		assignmentWeight: {
-			type: Sequelize.FLOAT,
-			allowNull: false
-		},
-		color: {
-			type: Sequelize.STRING,
-			allowNull: false
-		}
-	}, {
-		hooks: {
-			afterCreate: invalidateWarningCache,
-			afterBulkDestroy: invalidateWarningCache //deletion is done by deleting all WHERE id matches
-		}
-	})

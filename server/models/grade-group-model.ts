@@ -1,14 +1,22 @@
-import Sequelize from 'sequelize'
-import {GradeGroupAttributes, GradeGroupInstance} from './grade-group'
-import {addAssociations} from './index'
+import { Sequelize, DataTypes } from 'sequelize'
+import { GradeGroup } from './grade-group'
 
-export default (sequelize: Sequelize.Sequelize): Sequelize.Model<GradeGroupInstance, GradeGroupAttributes> =>
-	addAssociations(
-		sequelize.define<GradeGroupInstance, GradeGroupAttributes>('grade_group', {
-			year: { //not used as primary key so that it can be null
-				type: Sequelize.INTEGER,
-				unique: true
-			}
-		}),
-		({GradeGroup, Group}) => GradeGroup.belongsTo(Group)
-	)
+export default (sequelize: Sequelize) => {
+  GradeGroup.init({
+    year: {
+      type: DataTypes.INTEGER,
+      unique: true,
+      allowNull: true
+    },
+    groupId: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    }
+  }, {
+    sequelize,
+    modelName: 'GradeGroup',
+    tableName: 'grade_groups',
+    timestamps: false
+  })
+  return GradeGroup
+}

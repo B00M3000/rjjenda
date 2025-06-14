@@ -1,7 +1,5 @@
 import passport from 'passport'
 import {OAuth2Strategy as GoogleStrategy} from 'passport-google-oauth'
-import {StudentInstance} from './models/student'
-import {TeacherInstance} from './models/teacher'
 import {Student, Teacher} from './models'
 
 import dotenv from 'dotenv'
@@ -9,7 +7,7 @@ dotenv.config()
 
 const { HOST_DOMAIN, EMAIL_DOMAIN, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } = process.env
 
-export type UserType = StudentInstance | TeacherInstance
+export type UserType = Student | Teacher
 export class SavedUserType {
 	readonly id: string
 	readonly type: 'student' | 'teacher'

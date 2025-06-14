@@ -1,14 +1,16 @@
-import Sequelize from 'sequelize'
-import {StudentAttributes, StudentInstance} from './student'
-import {TeacherAttributes, TeacherInstance} from './teacher'
-import {CourseAttributes, CourseInstance} from './course'
-import {SectionAttributes, SectionInstance} from './section'
-import {GroupAttributes, GroupInstance} from './group'
-import {AssignmentAttributes, AssignmentInstance} from './assignment'
-import {LimitAttributes, LimitInstance} from './limit'
-import {WarningAttributes, WarningInstance} from './warning'
-import {GradeGroupAttributes, GradeGroupInstance} from './grade-group'
-import {EventAttributes, EventInstance} from './event'
+import { Sequelize } from 'sequelize'
+import fs from 'fs'
+import dotenv from 'dotenv'
+import { Student } from './student'
+import { Teacher } from './teacher'
+import { Course } from './course'
+import { Section } from './section'
+import { Group } from './group'
+import { Assignment } from './assignment'
+import { Limit } from './limit'
+import { Warning } from './warning'
+import { GradeGroup } from './grade-group'
+import { Event } from './event'
 import StudentModel from './student-model'
 import TeacherModel from './teacher-model'
 import CourseModel from './course-model'
@@ -19,83 +21,75 @@ import LimitModel from './limit-model'
 import WarningModel from './warning-model'
 import GradeGroupModel from './grade-group-model'
 import EventModel from './event-model'
-import fs from 'fs'
 
-import dotenv from 'dotenv'
 dotenv.config()
-
 const { DB_USERNAME, DB_DATABASE, DB_DIALECT, DB_PROTOCOL, DB_PORT, DB_HOST, DB_OPERATORS_ALIASES, DB_PASSWORD, DB_CA_PATH } = process.env
 const config = {
-	username: DB_USERNAME,
-	database: DB_DATABASE,
-	dialect: DB_DIALECT,
-	protocol: DB_PROTOCOL,
-	port: parseInt(DB_PORT),
-	host: DB_HOST,
-	operatorsAliases: DB_OPERATORS_ALIASES == "true",
-	password: DB_PASSWORD,
-	dialectOptions: {
-		ssl: {
-			ca: fs.readFileSync(DB_CA_PATH, 'utf8')
-		}
-	}
+  username: DB_USERNAME,
+  database: DB_DATABASE,
+  dialect: DB_DIALECT,
+  protocol: DB_PROTOCOL,
+  port: parseInt(DB_PORT),
+  host: DB_HOST,
+  operatorsAliases: DB_OPERATORS_ALIASES == "true",
+  password: DB_PASSWORD,
+  dialectOptions: {
+    ssl: {
+      ca: fs.readFileSync(DB_CA_PATH, 'utf8')
+    }
+  }
 }
 
-type AssociateFunction = (models: SequelizeModels) => void
-export interface SequelizeModels {
-	Student: Sequelize.Model<StudentInstance, StudentAttributes>
-	Teacher: Sequelize.Model<TeacherInstance, TeacherAttributes>
-	Course: Sequelize.Model<CourseInstance, CourseAttributes>
-	Section: Sequelize.Model<SectionInstance, SectionAttributes>
-	GradeGroup: Sequelize.Model<GradeGroupInstance, GradeGroupAttributes>
-	Group: Sequelize.Model<GroupInstance, GroupAttributes>
-	Assignment: Sequelize.Model<AssignmentInstance, AssignmentAttributes>
-	Limit: Sequelize.Model<LimitInstance, LimitAttributes>
-	Warning: Sequelize.Model<WarningInstance, WarningAttributes>
-	Event: Sequelize.Model<EventInstance, EventAttributes>
-	[modelName: string]: Sequelize.Model<any, any>
+const sequelize = new Sequelize(config as any)
+
+// Initialize all models
+StudentModel(sequelize)
+TeacherModel(sequelize)
+CourseModel(sequelize)
+SectionModel(sequelize)
+GroupModel(sequelize)
+AssignmentModel(sequelize)
+LimitModel(sequelize)
+WarningModel(sequelize)
+GradeGroupModel(sequelize)
+EventModel(sequelize)
+
+// Set up associations directly
+// Teacher - Student
+Teacher.hasMany(Student, { as: 'Advisees', foreignKey: 'advisorId' })
+Student.belongsTo(Teacher, { as: 'advisor' })
+// Teacher - Section
+Teacher.hasMany(Section)
+Section.belongsTo(Teacher)
+// Teacher - Group (displays)
+Teacher.belongsToMany(Group, { through: 'displays' })
+// Student - Group (memberships)
+Student.belongsToMany(Group, { through: 'memberships' })
+Group.belongsToMany(Student, { through: 'memberships' })
+// Course - Section
+Course.hasMany(Section, { onDelete: 'CASCADE' })
+Section.belongsTo(Course)
+// Section - Group
+Section.hasOne(Group, { onDelete: 'CASCADE' })
+Group.belongsTo(Section)
+// Group - Assignment
+Group.hasMany(Assignment, { onDelete: 'CASCADE' })
+Assignment.belongsTo(Group)
+// GradeGroup - Group
+GradeGroup.belongsTo(Group, { foreignKey: 'groupId' })
+// ... Add other associations as needed ...
+
+export {
+  sequelize,
+  Student,
+  Teacher,
+  Course,
+  Section,
+  Group,
+  Assignment,
+  Limit,
+  Warning,
+  GradeGroup,
+  Event
+  // ... Add other exports as needed ...
 }
-export function addAssociations<I, A>(model: Sequelize.Model<I, A>, associate: AssociateFunction): Sequelize.Model<I, A> {
-	return Object.assign(model, {associate})
-}
-
-class Database {
-	readonly sequelize: Sequelize.Sequelize
-	readonly models: SequelizeModels
-
-	constructor() {
-		this.sequelize = new Sequelize(config)
-		this.models = {
-			Student: StudentModel(this.sequelize),
-			Teacher: TeacherModel(this.sequelize),
-			Course: CourseModel(this.sequelize),
-			Section: SectionModel(this.sequelize),
-			Group: GroupModel(this.sequelize),
-			Assignment: AssignmentModel(this.sequelize),
-			Limit: LimitModel(this.sequelize),
-			Warning: WarningModel(this.sequelize),
-			GradeGroup: GradeGroupModel(this.sequelize),
-			Event: EventModel(this.sequelize)
-		}
-
-		for (const modelName in this.models) {
-			const model = this.models[modelName]
-			if (model.associate) model.associate(this.models)
-		}
-	}
-}
-
-const database = new Database
-export const sequelize = database.sequelize
-export const {
-	Student,
-	Teacher,
-	Course,
-	Section,
-	Group,
-	Assignment,
-	Limit,
-	Warning,
-	GradeGroup,
-	Event
-} = database.models

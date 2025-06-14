@@ -23,7 +23,7 @@ router.post('/new-event',
 	}
 )
 router.delete('/event/:id', (req, res) => {
-	const id: number = req.params.id
+	const id: number = Number(req.params.id)
 	Event.destroy({
 		where: {id}
 	})

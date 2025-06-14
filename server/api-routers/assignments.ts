@@ -28,8 +28,6 @@ import {checkAddition, getWarning, violationsForTeacher} from '../limit-check'
 import {Assignment, Course, Group, Section, Student, Teacher} from '../models'
 import {CourseAttributes} from '../models/course'
 import {SectionAttributes} from '../models/section'
-import {StudentInstance} from '../models/student'
-import {TeacherInstance} from '../models/teacher'
 import sectionGroupName from '../section-group-name'
 import ExtendedDate from '../../util/extended-date'
 
@@ -89,7 +87,7 @@ const router = express.Router()
 router.get('/my-displayed',
 	restrictToTeacher,
 	(req, res) => {
-		const {id} = req.user as TeacherInstance
+		const {id} = req.user as Teacher
 		Teacher.findOne({
 			attributes: [],
 			where: {id},
@@ -122,14 +120,14 @@ router.get('/my-displayed',
 router.post('/my-displayed/:groupId',
 	restrictToTeacher,
 	(req, res) => {
-		const groupId = req.params.groupId as number
+		const groupId = Number(req.params.groupId)
 		Group.findOne({
 			attributes: ['id'],
 			where: {id: groupId}
 		})
 			.then(group => {
 				if (group === null) throw new Error('No group with id: ' + String(groupId))
-				return (req.user as TeacherInstance).addGroup(group)
+				return (req.user as Teacher).addGroup(group)
 			})
 			.then(() => success(res))
 			.catch(error(res))
@@ -138,14 +136,14 @@ router.post('/my-displayed/:groupId',
 router.delete('/my-displayed/:groupId',
 	restrictToTeacher,
 	(req, res) => {
-		const groupId = req.params.groupId as number
+		const groupId = Number(req.params.groupId)
 		Group.findOne({
 			attributes: ['id'],
 			where: {id: groupId}
 		})
 			.then(group => {
 				if (group === null) throw new Error('No group with id: ' + String(groupId))
-				return (req.user as TeacherInstance).removeGroup(group)
+				return (req.user as Teacher).removeGroup(group)
 			})
 			.then(() => success(res))
 			.catch(error(res))
@@ -154,14 +152,14 @@ router.delete('/my-displayed/:groupId',
 router.get('/my-sections',
 	restrictToTeacher,
 	(req, res) => {
-		const {id} = req.user as TeacherInstance
+		const {id} = req.user as Teacher
 		getSectionsForTeacher(id, id, res)
 	}
 )
 router.get('/teacher-sections/:teacherId',
 	restrictToTeacher,
 	(req, res) =>
-		getSectionsForTeacher((req.user as TeacherInstance).id, req.params.teacherId as string, res)
+		getSectionsForTeacher((req.user as Teacher).id, req.params.teacherId as string, res)
 )
 router.get('/list-courses',
 	restrictToTeacher,
@@ -180,13 +178,13 @@ router.get('/course-sections/:courseId',
 	restrictToTeacher,
 	(req, res) => {
 		const courseId = req.params.courseId as string
-		getSections((req.user as TeacherInstance).id, {courseId}, res)
+		getSections((req.user as Teacher).id, {courseId}, res)
 	}
 )
 router.get('/my-classes',
 	restrictToStudent,
 	(req, res) => {
-		const student: StudentInstance = req.user as StudentInstance
+		const student: Student = req.user as Student
 		const {id} = student
 		Student.findOne({
 			attributes: [],
@@ -229,7 +227,7 @@ router.post('/search-groups',
 	restrictToTeacher, //students aren't allowed to look at groups besides the one they're in
 	bodyParser.json(),
 	(req, res) => {
-		const teacherId = (req.user as TeacherInstance).id
+		const teacherId = (req.user as Teacher).id
 		const {nameSearch} = req.body as GroupQuery
 		const findSectionGroups = Course.findAll({
 			where: containsCaseInsensitive('course.name', nameSearch) as Sequelize.WhereOptions<CourseAttributes>,
@@ -262,9 +260,7 @@ router.post('/search-groups',
 				}))
 				for (const course of courses) {
 					if (!course.sections) continue //should never occur
-					course.sections.sort((section1, section2) => //can't order on included model in Sequelize query
-						(section1.number as number) - (section2.number as number)
-					)
+					course.sections.sort((section1, section2) => Number(section1.number) - Number(section2.number))
 					for (const section of course.sections) {
 						section.course = course
 						response.push({
@@ -306,7 +302,7 @@ router.post('/new',
 	restrictToTeacher,
 	bodyParser.json(),
 	(req, res) => {
-		const teacher: TeacherInstance = req.user as TeacherInstance
+		const teacher: Teacher = req.user as Teacher
 		const {due, groupIds, major, name, visitors} = req.body as AddAssignment
 		Group.findAll({
 			attributes: ['id'],
@@ -343,7 +339,7 @@ router.post('/edit',
 	restrictToTeacher,
 	bodyParser.json(),
 	(req, res) => {
-		const teacher: TeacherInstance = req.user as TeacherInstance
+		const teacher: Teacher = req.user as Teacher
 		const {id, name, visitors} = req.body as EditAssignment
 		Assignment.findOne({
 			attributes: ['id'],
@@ -468,7 +464,7 @@ router.post('/warnings',
 router.delete('/:id',
 	restrictToTeacher,
 	(req, res) => {
-		const teacher: TeacherInstance = req.user as TeacherInstance
+		const teacher: Teacher = req.user as Teacher
 		const id = Number(req.params.id)
 		Assignment.findOne({
 			attributes: ['id'],
@@ -559,7 +555,7 @@ router.post('/no-visitors',
 router.get('/other-sections/:groupId',
 	restrictToTeacher,
 	(req, res) => {
-		const teacherId = (req.user as TeacherInstance).id
+		const teacherId = (req.user as Teacher).id
 		const groupId = Number(req.params.groupId)
 		Group.findOne({
 			attributes: [],
@@ -601,7 +597,7 @@ router.get('/other-sections/:groupId',
 router.get('/my-violations',
 	restrictToTeacher,
 	(req, res) => {
-		const teacherId = (req.user as TeacherInstance).id
+		const teacherId = (req.user as Teacher).id
 		violationsForTeacher(teacherId)
 			.then((response: AtFaultViolation[]) => success(res, response))
 			.catch(error(res))

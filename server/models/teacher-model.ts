@@ -1,41 +1,40 @@
-import Sequelize from 'sequelize'
-import {TeacherAttributes, TeacherInstance} from './teacher'
-import {addAssociations} from './index'
+import { Sequelize, DataTypes } from 'sequelize'
+import { Teacher } from './teacher'
 
-export default (sequelize: Sequelize.Sequelize): Sequelize.Model<TeacherInstance, TeacherAttributes> =>
-	addAssociations(
-		sequelize.define<TeacherInstance, TeacherAttributes>('teacher', {
-			id: {
-				type: Sequelize.STRING,
-				primaryKey: true,
-				allowNull: false,
-				validate: {is: /^T/}
-			},
-			firstName: {
-				type: Sequelize.STRING,
-				allowNull: false
-			},
-			lastName: {
-				type: Sequelize.STRING,
-				allowNull: false
-			},
-			username: {
-				type: Sequelize.STRING,
-				allowNull: false,
-				unique: true
-			},
-			admin: {
-				type: Sequelize.BOOLEAN,
-				allowNull: false
-			},
-			admissions: {
-				type: Sequelize.BOOLEAN,
-				allowNull: false
-			}
-		}),
-		({Group, Section, Student, Teacher}) => {
-			Teacher.hasMany(Student, {as: 'Advisees', foreignKey: 'advisorId'})
-			Teacher.hasMany(Section)
-			Teacher.belongsToMany(Group, {through: 'displays'})
-		}
-	)
+export default (sequelize: Sequelize) => {
+  Teacher.init({
+    id: {
+      type: DataTypes.STRING,
+      primaryKey: true,
+      allowNull: false,
+      validate: { is: /^T/ }
+    },
+    firstName: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    lastName: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    username: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true
+    },
+    admin: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false
+    },
+    admissions: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false
+    }
+  }, {
+    sequelize,
+    modelName: 'Teacher',
+    tableName: 'teachers',
+    timestamps: true
+  })
+  return Teacher
+}

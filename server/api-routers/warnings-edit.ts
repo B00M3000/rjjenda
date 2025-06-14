@@ -3,20 +3,17 @@ import express from 'express'
 import {Warnings, NewWarning} from '../../api'
 import {success, error} from '../api-respond'
 import {Warning} from '../models'
-import {WarningInstance} from '../models/warning'
-import {getWarnings} from '../models/warning-model'
 
 const router = express.Router()
-router.get('/warnings', (_, res) =>
-	(getWarnings() as Promise<WarningInstance[]>)
-		.then(warnings =>
-			warnings.map(({id, assignmentWeight, color}) =>
-				({id, weight: assignmentWeight, color})
-			)
-		)
-		.then((response: Warnings) => success(res, response))
-		.catch(error(res))
-)
+router.get('/warnings', async (_, res) => {
+  try {
+    const warnings = await Warning.findAll()
+    const response: Warnings = warnings.map(({id, assignmentWeight, color}) => ({id, weight: assignmentWeight, color}))
+    success(res, response)
+  } catch (err) {
+    error(res)(err)
+  }
+})
 const HEX_COLOR = /^#[0-9A-F]{6}$/
 router.post('/warning',
 	bodyParser.json(),

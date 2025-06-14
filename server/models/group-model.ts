@@ -1,20 +1,26 @@
-import Sequelize from 'sequelize'
-import {GroupAttributes, GroupInstance} from './group'
-import {addAssociations} from './index'
+import { Sequelize, DataTypes } from 'sequelize'
+import { Group } from './group'
 
-export default (sequelize: Sequelize.Sequelize): Sequelize.Model<GroupInstance, GroupAttributes> =>
-	addAssociations(
-		sequelize.define<GroupInstance, GroupAttributes>('group', {
-			name: Sequelize.STRING
-		}),
-		({Group, Student, Section, Assignment, GradeGroup}) => {
-			Group.belongsToMany(Student, {through: 'memberships'})
-			Group.belongsTo(Section)
-			Group.hasOne(GradeGroup, {
-				onDelete: 'CASCADE'
-			})
-			Group.hasMany(Assignment, {
-				onDelete: 'CASCADE'
-			})
-		}
-	)
+export default (sequelize: Sequelize) => {
+  Group.init({
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    sectionId: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    }
+  }, {
+    sequelize,
+    modelName: 'Group',
+    tableName: 'groups',
+    timestamps: true
+  })
+  return Group
+}

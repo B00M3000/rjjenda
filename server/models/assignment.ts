@@ -1,5 +1,5 @@
-import {Instance} from 'sequelize'
-import {GroupInstance} from './group'
+import { Model, Optional } from 'sequelize'
+import { Group } from './group'
 
 export interface AssignmentAttributes {
 	id?: number //arbitrary
@@ -10,8 +10,18 @@ export interface AssignmentAttributes {
 	weight: number //allows for flexibility, but currently will be 0 for minor/event and 1 for major
 }
 
-export interface AssignmentInstance extends Instance<AssignmentAttributes>, AssignmentAttributes {
-	createdAt: Date
-	due: string
-	group: GroupInstance
+export interface AssignmentCreationAttributes extends Optional<AssignmentAttributes, 'id'> {}
+
+export class Assignment extends Model<AssignmentAttributes, AssignmentCreationAttributes> implements AssignmentAttributes {
+	public id!: number
+	public due!: string
+	public groupId!: number
+	public name!: string
+	public visitors!: boolean
+	public weight!: number
+
+	public readonly createdAt!: Date
+	public readonly updatedAt!: Date
+
+	public group?: Group
 }

@@ -3,7 +3,7 @@ import {restrictToLoggedIn} from '../api-restrict'
 import {success} from '../api-respond'
 import {UserInfo} from '../../api'
 import {SavedUserType, UserType} from '../authentication'
-import {TeacherInstance} from '../models/teacher'
+import {Teacher} from '../models'
 
 const router = express.Router()
 router.get('/',
@@ -16,8 +16,8 @@ router.get('/',
 		user.reload({attributes})
 			.then(user => {
 				const response: UserInfo = {
-					admin: teacher && (user as any as TeacherInstance).admin,
-					admissions: teacher && (user as any as TeacherInstance).admissions,
+					admin: teacher && (user as any as Teacher).admin,
+					admissions: teacher && (user as any as Teacher).admissions,
 					name: (user as any as UserType).firstName
 				}
 				success(res, response)

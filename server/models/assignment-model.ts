@@ -1,28 +1,38 @@
-import Sequelize from 'sequelize'
-import {AssignmentAttributes, AssignmentInstance} from './assignment'
-import {addAssociations} from './index'
+import { Sequelize, DataTypes } from 'sequelize'
+import { Assignment } from './assignment'
 
-export default (sequelize: Sequelize.Sequelize): Sequelize.Model<AssignmentInstance, AssignmentAttributes> =>
-	addAssociations(
-		sequelize.define<AssignmentInstance, AssignmentAttributes>('assignment', {
-			weight: {
-				type: Sequelize.FLOAT,
-				allowNull: false
-			},
-			due: {
-				type: Sequelize.DATEONLY,
-				allowNull: false
-			},
-			name: {
-				type: Sequelize.STRING,
-				allowNull: false
-			},
-			visitors: {
-				type: Sequelize.BOOLEAN,
-				allowNull: false
-			}
-		}),
-		({Assignment, Group}) => {
-			Assignment.belongsTo(Group)
-		}
-	)
+export default (sequelize: Sequelize) => {
+  Assignment.init({
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true
+    },
+    weight: {
+      type: DataTypes.FLOAT,
+      allowNull: false
+    },
+    due: {
+      type: DataTypes.DATEONLY,
+      allowNull: false
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    visitors: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false
+    },
+    groupId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    }
+  }, {
+    sequelize,
+    modelName: 'Assignment',
+    tableName: 'assignments',
+    timestamps: true
+  })
+  return Assignment
+}

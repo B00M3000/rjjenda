@@ -5,13 +5,12 @@ import {success, error} from '../api-respond'
 import {restrictToTeacher} from '../api-restrict'
 import {getWarning} from '../limit-check'
 import {Assignment, Course, Group, Section, Student, Teacher} from '../models'
-import {TeacherInstance} from '../models/teacher'
 import ExtendedDate from '../../util/extended-date'
 
 const router = express.Router()
 router.use(restrictToTeacher)
 router.get('/advisees', (req, res) => {
-	const teacher: TeacherInstance = req.user as TeacherInstance
+	const teacher: Teacher = req.user as Teacher
 	Student.findAll({
 		attributes: ['id', 'firstName', 'lastName'],
 		where: {advisorId: teacher.id},

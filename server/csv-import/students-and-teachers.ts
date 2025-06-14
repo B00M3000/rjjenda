@@ -2,7 +2,6 @@ import {parse, RowObject} from './csv-parse'
 import {Readable} from 'stream'
 import {NewStudent} from '../../api'
 import {GradeGroup, Group, Student, Teacher} from '../models'
-import {GroupInstance} from '../models/group'
 
 import dotenv from 'dotenv'
 dotenv.config()
@@ -35,7 +34,7 @@ export function importStudents(students: NewStudent[], requireCreation: boolean)
 	}
 	//Create groups for each of the grades
 	const gradeGroupCreations: PromiseLike<any>[] = []
-	const gradeGroups = new Map<number | null, GroupInstance>()
+	const gradeGroups = new Map<number | null, Group>()
 	for (const year of years) {
 		gradeGroupCreations.push(
 			GradeGroup.findOrCreate({
@@ -66,13 +65,13 @@ export function importStudents(students: NewStudent[], requireCreation: boolean)
 						})
 					}
 				})
-				.then(group => gradeGroups.set(year, group as GroupInstance))
+				.then(group => gradeGroups.set(year, group as Group))
 		)
 	}
 	//Instantiate all the students
 	return Promise.all(gradeGroupCreations)
 		.then(() => {
-			const allSchoolGroup = gradeGroups.get(null) as GroupInstance
+			const allSchoolGroup = gradeGroups.get(null) as Group
 			return Promise.all(students.map(student => {
 				const {id, lastName, firstName, username, year} = student
 				return Student.findOrCreate({
@@ -88,7 +87,7 @@ export function importStudents(students: NewStudent[], requireCreation: boolean)
 				})
 					.then(([student, created]): PromiseLike<any> => { //add student to automatic groups
 						if (created) {
-							const gradeGroup = gradeGroups.get(student.year) as GroupInstance
+							const gradeGroup = gradeGroups.get(student.year) as Group
 							return Promise.all([gradeGroup, allSchoolGroup].map(group =>
 								group.addStudent(student)
 							))

@@ -1,23 +1,22 @@
-import Sequelize from 'sequelize'
-import {CourseAttributes, CourseInstance} from './course'
-import {addAssociations} from './index'
+import { Sequelize, DataTypes } from 'sequelize'
+import { Course } from './course'
 
-export default (sequelize: Sequelize.Sequelize): Sequelize.Model<CourseInstance, CourseAttributes> =>
-	addAssociations(
-		sequelize.define<CourseInstance, CourseAttributes>('course', {
-			id: {
-				type: Sequelize.STRING,
-				primaryKey: true,
-				allowNull: false
-			},
-			name: {
-				type: Sequelize.STRING,
-				allowNull: false
-			}
-		}),
-		({Course, Section}) => {
-			Course.hasMany(Section, {
-				onDelete: 'CASCADE'
-			})
-		}
-	)
+export default (sequelize: Sequelize) => {
+  Course.init({
+    id: {
+      type: DataTypes.STRING,
+      primaryKey: true,
+      allowNull: false
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false
+    }
+  }, {
+    sequelize,
+    modelName: 'Course',
+    tableName: 'courses',
+    timestamps: true
+  })
+  return Course
+}

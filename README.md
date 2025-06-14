@@ -1,6 +1,17 @@
-# rjjenda
+# Rjjenda - dependencies updated and dockerized
 
-## Initializing database
+Brought to you by Thomas Zhou (tzhou@commschool.org)
+
+## Building the Rjjenda Image
+
+````
+docker build -t rjjenda
+````
+
+## Running Rjjenda for the first time
+
+### Initializing database
+
 ````
 $ psql postgres
 
@@ -10,17 +21,27 @@ postgres=# GRANT ALL ON DATABASE "rjjenda" TO rjjenda;
 postgres=# \q
 ````
 
-## Initial setup commands
+### Initial setup commands
+
 ````bash
 npm run compile
 init-scripts/sync-database.js
-init-scripts/import-students-teachers.js csvFile #provide path to users CSV file
-init-scripts/set-admin.js username #provide username of initial admin
+init-scripts/import-students-teachers.js csvFile # provide path to users CSV file
+init-scripts/set-admin.js username # provide username of initial admin
 ````
+
+## Restarting Rjjenda
+
+Run `docker compose up -d` or `docker compose restart -d` depending on your case.
+
+## Stopping Rjjenda
+
+Run `docker compose down`.
 
 Everything else is easier to accomplish through the admin interface.
 
 ## Compiling the server-side TypeScript and starting the server
+
 ````
 npm start
 ````

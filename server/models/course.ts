@@ -1,11 +1,15 @@
-import {Instance} from 'sequelize'
-import {SectionInstance} from './section'
+import { Model, Optional } from 'sequelize'
+import { Section } from './section'
 
 export interface CourseAttributes {
-	id: string //e.g. 101
-	name: string //e.g. English 9
+  id: string
+  name: string
 }
 
-export interface CourseInstance extends Instance<CourseAttributes>, CourseAttributes {
-	sections?: SectionInstance[]
+export interface CourseCreationAttributes extends Optional<CourseAttributes, never> {}
+
+export class Course extends Model<CourseAttributes, CourseCreationAttributes> implements CourseAttributes {
+  public id!: string
+  public name!: string
+  public sections?: Section[]
 }

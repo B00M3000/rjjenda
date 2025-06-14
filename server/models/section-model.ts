@@ -1,24 +1,34 @@
-import Sequelize from 'sequelize'
-import {SectionAttributes, SectionInstance} from './section'
-import {addAssociations} from './index'
+import { Sequelize, DataTypes } from 'sequelize'
+import { Section } from './section'
 
-export default (sequelize: Sequelize.Sequelize): Sequelize.Model<SectionInstance, SectionAttributes> =>
-	addAssociations(
-		sequelize.define<SectionInstance, SectionAttributes>('section', {
-			number: {
-				type: Sequelize.INTEGER,
-				allowNull: false
-			},
-			periods: {
-				type: Sequelize.STRING,
-				allowNull: true
-			}
-		}),
-		({Section, Course, Teacher, Group}) => {
-			Section.belongsTo(Course)
-			Section.belongsTo(Teacher)
-			Section.hasOne(Group, {
-				onDelete: 'CASCADE'
-			})
-		}
-	)
+export default (sequelize: Sequelize) => {
+  Section.init({
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true
+    },
+    number: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    periods: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    courseId: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    teacherId: {
+      type: DataTypes.STRING,
+      allowNull: true
+    }
+  }, {
+    sequelize,
+    modelName: 'Section',
+    tableName: 'sections',
+    timestamps: true
+  })
+  return Section
+}

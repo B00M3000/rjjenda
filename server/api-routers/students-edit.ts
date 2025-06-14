@@ -4,7 +4,6 @@ import {NewStudent, Students, StudentUpdate} from '../../api'
 import {error, success} from '../api-respond'
 import {importStudents} from '../csv-import/students-and-teachers'
 import {GradeGroup, Group, Student, Teacher} from '../models'
-import {GroupInstance} from '../models/group'
 
 const router = express.Router()
 router.get('/students', (_, res) => {
@@ -56,7 +55,7 @@ router.post('/student/:id/update',
 			.then(student => {
 				if (student === null) throw new Error('No such student id: ' + id)
 				const oldYear = student.year
-				return student.set(attribute, value).save()
+				return student.set({ [attribute]: value }).save()
 					.then((): Promise<any> => {
 						if (attribute === 'year') {
 							const newYear = value
@@ -82,7 +81,7 @@ router.post('/student/:id/update',
 								}]
 							})
 								.then(([gradeGroup, created]) => {
-									let groupPromise: PromiseLike<GroupInstance>
+									let groupPromise: PromiseLike<Group>
 									if (created) {
 										groupPromise = Group.create({
 											name: 'Class of ' + String(newYear),

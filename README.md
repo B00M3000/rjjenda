@@ -1,6 +1,9 @@
 # rjjenda
 
 ## Intializing database
+
+`sudo -u postgres psql`
+
 ````
 $ psql postgres
 
